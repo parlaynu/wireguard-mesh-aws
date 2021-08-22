@@ -35,7 +35,7 @@ resource "aws_default_security_group" "sites" {
 
   vpc_id = each.value.id
   tags = {
-    Name = "${var.studio_name}_${each.key}"
+    Name = "${var.studio_name}_${each.key}_default"
   }
 
   ingress {
@@ -45,19 +45,56 @@ resource "aws_default_security_group" "sites" {
     to_port   = 0
   }
 
-  ingress {
-    protocol    = "tcp"
-    from_port   = 22
-    to_port     = 22
-    cidr_blocks = ["${data.external.my_public_ip.result["my_public_ip"]}/32"]
-  }
-
   egress {
+    protocol    = -1
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_security_group" "external" {
+  for_each = aws_vpc.sites
+  
+  name        = "external"
+  description = "Allow external inbound traffic"
+  vpc_id      = each.value.id
+  tags = {
+    Name = "${var.studio_name}_${each.key}_external"
+  }
+}
+
+resource "aws_security_group_rule" "egress" {
+  for_each = aws_security_group.external
+  
+  security_group_id = each.value.id
+  type              = "egress"
+  protocol          = -1
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "external_ssh" {
+  for_each = aws_security_group.external
+  
+  security_group_id = each.value.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 22
+  to_port           = 22
+  cidr_blocks       = ["${data.external.my_public_ip.result["my_public_ip"]}/32"]
+}
+
+resource "aws_security_group_rule" "external_wireguard" {
+  for_each = aws_security_group.external
+  
+  security_group_id = each.value.id
+  type              = "ingress"
+  protocol          = "udp"
+  from_port         = 51820
+  to_port           = 51820
+  cidr_blocks       = [for k, v in data.aws_instance.server : "${v.public_ip}/32" if k != each.key]
 }
 
 ## create the internet gateway

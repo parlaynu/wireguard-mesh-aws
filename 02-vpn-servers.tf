@@ -39,7 +39,7 @@ resource "aws_spot_instance_request" "server" {
   instance_type = var.instance_type
   
   key_name                    = var.studio_name
-  vpc_security_group_ids      = [aws_default_security_group.sites[each.key].id]
+  vpc_security_group_ids      = [aws_default_security_group.sites[each.key].id, aws_security_group.external[each.key].id]
   subnet_id                   = aws_subnet.sites[each.key].id
   private_ip                  = cidrhost(aws_subnet.sites[each.key].cidr_block, 6)
   associate_public_ip_address = true
