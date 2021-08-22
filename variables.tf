@@ -1,4 +1,3 @@
-## aws definitions
 
 variable "aws_profile" {
   default = ""

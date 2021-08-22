@@ -1,3 +1,2 @@
-
-#aws_profile = "my-profile"
-#aws_region = "my-region"
+aws_profile = "my-profile"
+aws_region = "my-region"
