@@ -94,7 +94,7 @@ resource "aws_security_group_rule" "external_wireguard" {
   protocol          = "udp"
   from_port         = 51820
   to_port           = 51820
-  cidr_blocks       = [for k, v in data.aws_instance.server : "${v.public_ip}/32" if k != each.key]
+  cidr_blocks       = [for k, v in data.aws_instance.vpn_server : "${v.public_ip}/32" if k != each.key]
 }
 
 ## create the internet gateway

@@ -10,7 +10,7 @@ hostnamectl set-hostname ${server_name}
 apt-get update
 
 # install useful packages
-apt install net-tools
+apt install net-tools wireguard-tools
 
 # flag that we're ready
 touch ~ubuntu/READY

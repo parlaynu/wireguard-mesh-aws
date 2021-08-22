@@ -32,7 +32,7 @@ data "template_file" "setup" {
 
 ## the spot instances
 
-resource "aws_spot_instance_request" "server" {
+resource "aws_spot_instance_request" "vpn_server" {
   for_each = aws_vpc.sites
 
   ami           = var.instance_ami
@@ -43,7 +43,7 @@ resource "aws_spot_instance_request" "server" {
   subnet_id                   = aws_subnet.sites[each.key].id
   private_ip                  = cidrhost(aws_subnet.sites[each.key].cidr_block, 6)
   associate_public_ip_address = true
-  source_dest_check           = true
+  source_dest_check           = false
   disable_api_termination     = false
   user_data                   = data.template_file.setup[each.key].rendered
   
@@ -56,16 +56,16 @@ resource "aws_spot_instance_request" "server" {
   }
 }
 
-data "aws_instance" "server" {
+data "aws_instance" "vpn_server" {
   for_each = aws_vpc.sites
 
-  instance_id = aws_spot_instance_request.server[each.key].spot_instance_id
+  instance_id = aws_spot_instance_request.vpn_server[each.key].spot_instance_id
 }
 
 
 ## tag the spot instances
 
-resource "null_resource" "server" {
+resource "null_resource" "vpn_server" {
   for_each = aws_vpc.sites
 
   provisioner "local-exec" {
@@ -74,14 +74,14 @@ resource "null_resource" "server" {
     environment = {
       TAG_PROFILE     = var.aws_profile
       TAG_REGION      = var.aws_region
-      TAG_RESOURCE_ID = data.aws_instance.server[each.key].id
+      TAG_RESOURCE_ID = data.aws_instance.vpn_server[each.key].id
       TAG_NAME        = "Name"
       TAG_VALUE       = "${var.studio_name}_${each.key}_vpn"
     }
   }
   
   triggers = {
-    spot_requests = aws_spot_instance_request.server[each.key].spot_instance_id
+    spot_requests = aws_spot_instance_request.vpn_server[each.key].spot_instance_id
   }
 }
 
@@ -90,7 +90,7 @@ resource "null_resource" "server" {
 
 resource "local_file" "ssh_config" {
   content = templatefile("templates/ssh.cfg.tpl", {
-    config = data.aws_instance.server,
+    config = data.aws_instance.vpn_server,
     ssh_username  = "ubuntu",
     ssh_key_file  = local.ssh_private_key_file
     })
