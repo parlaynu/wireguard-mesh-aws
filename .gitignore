@@ -1,0 +1,14 @@
+.DS_Store
+
+# ignore ca files
+*.key
+*.crt
+
+# ignore terraform working state
+*.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.*
+local/
+
