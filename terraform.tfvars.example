@@ -1,2 +1,6 @@
 aws_profile = "my-profile"
 aws_region = "my-region"
+
+instance_type = "my-instance-type"
+instance_ami = "my-instance-ami"
+spot_price = 0.02

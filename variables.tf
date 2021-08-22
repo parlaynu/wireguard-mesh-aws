@@ -1,12 +1,4 @@
 
-variable "aws_profile" {
-  default = ""
-}
-
-variable "aws_region" {
-  default = ""
-}
-
 variable "sites" {
   type = map(object({
     cidr_block = string
@@ -26,3 +18,32 @@ variable "sites" {
     }
   }
 }
+
+variable "aws_profile" {
+  default = ""
+}
+
+variable "aws_region" {
+  default = ""
+}
+
+variable "instance_type" {
+  default = "t2.micro"
+}
+
+variable "instance_ami" {
+  default = ""
+}
+
+variable "spot_price" {
+  default = 0.02
+}
+
+variable "studio_name" {
+  default = "s1330"
+}
+
+locals {
+  ssh_private_key_file = "local/pki/${var.studio_name}"
+}
+
