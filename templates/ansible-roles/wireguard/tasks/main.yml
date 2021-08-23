@@ -1,0 +1,8 @@
+- name: install config file
+  template:
+    src: wireguard.cfg
+    dest: /tmp/wireguard.cfg
+    owner: root
+    group: root
+    mode: 0440
+
