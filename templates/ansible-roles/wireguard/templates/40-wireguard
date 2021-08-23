@@ -1,0 +1,13 @@
+# setup the interface (core)
+ip link add dev wg0 type wireguard
+ip address add dev wg0 192.168.99.100/24
+wg setconf wg0 /tmp/wireguard.cfg
+ip link set up dev wg0
+
+
+# setup routes
+ip route add 192.168.1.0/24 via 192.168.24.1
+ip route add 1.1.1.1/32 via 192.168.24.1
+ip route add 1.0.0.1/32 via 192.168.24.1
+ip route add 1.1.1.2/32 via 192.168.24.1
+ip route add 1.0.0.2/32 via 192.168.24.1

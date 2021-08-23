@@ -27,7 +27,9 @@ resource "local_file" "hostvars" {
   content = templatefile("templates/ansible/hostvars.yml.tpl", {
     server_name      = each.key,
     public_ip        = each.value.public_ip,
+    vpn_ip           = cidrhost(var.vpn_cidr_block, var.sites[each.key].hostnum)
     private_key      = var.sites[each.key].private_key,
+    
     peers = [for k, v in data.aws_instance.vpn_server :
         {
           name = k,
@@ -35,6 +37,7 @@ resource "local_file" "hostvars" {
           cidr_block = var.sites[k].cidr_block,
           public_ip = v.public_ip,
           private_ip = v.private_ip,
+          vpn_ip = cidrhost(var.vpn_cidr_block, var.sites[k].hostnum)
         }
         if k != each.key
       ]
