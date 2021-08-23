@@ -1,5 +1,6 @@
 aws_profile = "my-profile"
 aws_region = "my-region"
+aws_zone = "my-zone"
 
 instance_type = "my-instance-type"
 instance_ami = "my-instance-ami"

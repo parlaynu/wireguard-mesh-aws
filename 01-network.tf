@@ -115,6 +115,7 @@ resource "aws_subnet" "sites" {
 
   vpc_id     = each.value.id
   cidr_block = each.value.cidr_block
+  availability_zone = var.aws_zone
 
   tags = {
     Name = "${var.studio_name}_${each.key}"
