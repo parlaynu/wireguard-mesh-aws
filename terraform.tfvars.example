@@ -4,3 +4,27 @@ aws_region = "my-region"
 instance_type = "my-instance-type"
 instance_ami = "my-instance-ami"
 spot_price = 0.02
+
+sites = {
+  core = {
+    cidr_block  = "192.168.100.0/24"
+    private_key = "core-private-key"
+    public_key  = "core-public-key"
+  }
+  site1 = {
+    cidr_block  = "192.168.101.0/24"
+    private_key = "site1-private-key"
+    public_key  = "site1-public-key"
+  }
+  site2 = {
+    cidr_block  = "192.168.102.0/24"
+    private_key = "site2-private-key"
+    public_key  = "site2-public-key"
+  }
+  site3 = {
+    cidr_block  = "192.168.103.0/24"
+    private_key = "site3-private-key"
+    public_key  = "site3-public-key"
+  }
+}
+

@@ -1,20 +1,30 @@
 
 variable "sites" {
   type = map(object({
-    cidr_block = string
+    cidr_block = string,
+    private_key = string,
+    public_key = string
   }))
   default = {
     core = {
-      cidr_block = "192.168.100.0/24"
+      cidr_block  = "192.168.100.0/24"
+      private_key = ""
+      public_key  = ""
     }
     site1 = {
-      cidr_block = "192.168.101.0/24"
+      cidr_block  = "192.168.101.0/24"
+      private_key = ""
+      public_key  = ""
     }
     site2 = {
-      cidr_block = "192.168.102.0/24"
+      cidr_block  = "192.168.102.0/24"
+      private_key = ""
+      public_key  = ""
     }
     site3 = {
-      cidr_block = "192.168.103.0/24"
+      cidr_block  = "192.168.103.0/24"
+      private_key = ""
+      public_key  = ""
     }
   }
 }
