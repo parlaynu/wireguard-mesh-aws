@@ -1,4 +1,4 @@
-## create the ssh key to use for servers
+## ssh access to the instances
 
 resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
@@ -16,6 +16,17 @@ resource "aws_key_pair" "ssh_key" {
   public_key = tls_private_key.ssh_key.public_key_openssh
 }
 
+resource "local_file" "ssh_config" {
+  content = templatefile("templates/ssh.cfg.tpl", {
+    config = data.aws_instance.vpn_server,
+    ssh_username  = "ubuntu",
+    ssh_key_file  = local.ssh_private_key_file
+    })
+    
+  filename        = "local/ssh.cfg"
+  file_permission = "0640"
+}
+
 
 ## the spot instances
 
@@ -27,8 +38,8 @@ resource "aws_spot_instance_request" "vpn_server" {
   
   key_name                    = var.studio_name
   vpc_security_group_ids      = [aws_default_security_group.sites[each.key].id, aws_security_group.external[each.key].id]
-  subnet_id                   = aws_subnet.sites[each.key].id
-  private_ip                  = cidrhost(aws_subnet.sites[each.key].cidr_block, 6)
+  subnet_id                   = aws_subnet.sites_public[each.key].id
+  private_ip                  = cidrhost(aws_subnet.sites_public[each.key].cidr_block, 6)
   associate_public_ip_address = true
   source_dest_check           = false
   disable_api_termination     = false
@@ -47,7 +58,7 @@ resource "aws_spot_instance_request" "vpn_server" {
   # the gateway route needs to be in place so the 
   # instance setup scripts can run
   depends_on = [
-    aws_route.sites_public_default,
+    aws_route.sites_public_default
   ]
 }
 
@@ -57,6 +68,29 @@ data "aws_instance" "vpn_server" {
   instance_id = aws_spot_instance_request.vpn_server[each.key].spot_instance_id
 }
 
+# an artificial dependency on the instances to wait for them to be
+# in the running state. required by some resources such as routes
+# with the instance_id as the target.
+resource "null_resource" "instance_ready" {
+  for_each = data.aws_instance.vpn_server
+  
+  provisioner "remote-exec" {
+    connection {
+      type = "ssh"
+      host = each.value.public_ip
+      user = "ubuntu"
+      private_key = file(local.ssh_private_key_file)
+    }
+
+    inline = [
+      "ping -c 2 localhost"
+    ]
+  }
+  
+  depends_on = [
+    local_file.ssh_private_key
+  ]
+}
 
 ## tag the spot instances
 
@@ -80,17 +114,4 @@ resource "null_resource" "vpn_server" {
   }
 }
 
-
-## client ssh configuration
-
-resource "local_file" "ssh_config" {
-  content = templatefile("templates/ssh.cfg.tpl", {
-    config = data.aws_instance.vpn_server,
-    ssh_username  = "ubuntu",
-    ssh_key_file  = local.ssh_private_key_file
-    })
-    
-  filename        = "local/ssh.cfg"
-  file_permission = "0640"
-}
 

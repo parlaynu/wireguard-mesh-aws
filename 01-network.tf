@@ -35,7 +35,7 @@ resource "aws_default_security_group" "sites" {
 
   vpc_id = each.value.id
   tags = {
-    Name = "${var.studio_name}_${each.key}_default"
+    Name = "${var.studio_name}_${each.key}_internal"
   }
 
   ingress {
@@ -108,17 +108,17 @@ resource "aws_internet_gateway" "sites" {
   }
 }
 
-## create the subnet
+## create the public subnets and routes
 
-resource "aws_subnet" "sites" {
+resource "aws_subnet" "sites_public" {
   for_each = aws_vpc.sites
 
   vpc_id     = each.value.id
-  cidr_block = each.value.cidr_block
+  cidr_block = cidrsubnet(each.value.cidr_block, 2, 0)
   availability_zone = var.aws_zone
 
   tags = {
-    Name = "${var.studio_name}_${each.key}"
+    Name = "${var.studio_name}_${each.key}_pub"
   }
 }
 
@@ -126,7 +126,7 @@ resource "aws_route_table_association" "sites_public" {
   for_each = aws_vpc.sites
 
   route_table_id = each.value.main_route_table_id
-  subnet_id      = aws_subnet.sites[each.key].id
+  subnet_id      = aws_subnet.sites_public[each.key].id
 }
 
 resource "aws_route" "sites_public_default" {
@@ -137,3 +137,57 @@ resource "aws_route" "sites_public_default" {
   destination_cidr_block = "0.0.0.0/0"
 }
 
+
+## create the private subnets and routes
+
+resource "aws_subnet" "sites_private" {
+  for_each = aws_vpc.sites
+
+  vpc_id     = each.value.id
+  cidr_block = cidrsubnet(each.value.cidr_block, 2, 1)
+  availability_zone = var.aws_zone
+
+  tags = {
+    Name = "${var.studio_name}_${each.key}_prv"
+  }
+}
+
+resource "aws_route_table" "sites_private" {
+  for_each = aws_vpc.sites
+
+  vpc_id = each.value.id
+  tags = {
+    Name = "${var.studio_name}_${each.key}_prv"
+  }  
+}
+
+resource "aws_route_table_association" "sites_private" {
+  for_each = aws_vpc.sites
+
+  route_table_id = aws_route_table.sites_private[each.key].id
+  subnet_id      = aws_subnet.sites_private[each.key].id
+}
+
+resource "aws_route" "sites_private_default" {
+  for_each = aws_vpc.sites
+
+  route_table_id = aws_route_table.sites_private[each.key].id
+  instance_id    = data.aws_instance.vpn_server[each.key].id
+  destination_cidr_block = "0.0.0.0/0"
+  
+  depends_on = [
+    null_resource.instance_ready
+  ]
+}
+
+resource "aws_route" "sites_private_internal" {
+  for_each = local.site_peers
+
+  route_table_id = aws_route_table.sites_private[each.value.local_name].id
+  instance_id    = data.aws_instance.vpn_server[each.value.local_name].id
+  destination_cidr_block = each.value.remote_net
+
+  depends_on = [
+    null_resource.instance_ready
+  ]
+}

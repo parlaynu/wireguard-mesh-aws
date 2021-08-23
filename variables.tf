@@ -34,6 +34,25 @@ variable "sites" {
   }
 }
 
+locals {
+  sites = [
+    for site, values in var.sites : {
+      name = site
+      cidr_block = values.cidr_block
+    }
+  ]
+  
+  site_peers = {
+    for pair in setproduct(local.sites, local.sites) : "${pair[0].name}_${pair[1].name}" => {
+      local_name  = pair[0].name
+      local_net   = pair[0].cidr_block
+      remote_name = pair[1].name
+      remote_net  = pair[1].cidr_block
+    }
+    if pair[0].name != pair[1].name
+  }
+}
+
 variable "vpn_cidr_block" {
   default = "192.168.99.0/24"
 }

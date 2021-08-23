@@ -32,11 +32,11 @@ resource "local_file" "hostvars" {
     
     peers = [for k, v in data.aws_instance.vpn_server :
         {
-          name = k,
-          public_key = var.sites[k].public_key,
-          cidr_block = var.sites[k].cidr_block,
-          public_ip = v.public_ip,
-          private_ip = v.private_ip,
+          name = k
+          public_key = var.sites[k].public_key
+          cidr_block = var.sites[k].cidr_block
+          public_ip = v.public_ip
+          private_ip = v.private_ip
           vpn_ip = cidrhost(var.vpn_cidr_block, var.sites[k].hostnum)
         }
         if k != each.key
