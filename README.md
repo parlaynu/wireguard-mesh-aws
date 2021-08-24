@@ -21,8 +21,9 @@ Copy the `terraform.tfvars.example` to `terraform.tfvars` and fill in the variab
 custom values.
 
 You need to generate wireguard keys in advance - tried to make this work with terraform directly
-but couldn't figure it out. For each site, create the private and public keys with a bash 
-loop like this:
+but couldn't figure it out.
+
+Create the private and public keys with a bash loop like this:
 
     for site in core site1 site2 site3
     do
