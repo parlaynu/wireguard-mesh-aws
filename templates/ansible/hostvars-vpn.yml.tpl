@@ -1,6 +1,7 @@
 ---
 server_name: ${server_name}
 public_ip: ${public_ip}
+private_ip: ${private_ip}
 cidr_block: ${cidr_block}
 
 vpn_cidr_block: ${vpn_cidr_block}

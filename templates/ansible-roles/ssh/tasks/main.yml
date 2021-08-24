@@ -1,0 +1,17 @@
+
+- name: install ssh config
+  template:
+    src: config
+    dest: /home/ubuntu/.ssh/config
+    owner: ubuntu
+    group: ubuntu
+    mode: 0440
+
+- name: install ssh key
+  copy:
+    src: key
+    dest: /home/ubuntu/.ssh/${studio_name}
+    owner: ubuntu
+    group: ubuntu
+    mode: 0400
+

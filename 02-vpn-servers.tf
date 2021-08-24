@@ -18,7 +18,8 @@ resource "aws_key_pair" "ssh_key" {
 
 resource "local_file" "ssh_config" {
   content = templatefile("templates/ssh.cfg.tpl", {
-    config = data.aws_instance.vpn_server,
+    vpn_config = data.aws_instance.vpn_server,
+    prv_config = data.aws_instance.private_server,
     ssh_username  = "ubuntu",
     ssh_key_file  = local.ssh_private_key_file
     })

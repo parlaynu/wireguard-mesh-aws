@@ -1,3 +1,5 @@
 [gateways]
 ${gateways}
 
+[servers]
+${servers}

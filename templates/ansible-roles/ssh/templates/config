@@ -1,0 +1,15 @@
+
+{% for vpn_server in vpn_servers %}
+Host {{ vpn_server.name }}
+  Hostname {{ vpn_server.private_ip }}
+{% endfor %}
+
+{% for prv_server in prv_servers %}
+Host {{ prv_server.name }}
+  Hostname {{ prv_server.private_ip }}
+{% endfor %}
+
+Host *
+  User ubuntu
+  IdentityFile ~/.ssh/${studio_name}
+

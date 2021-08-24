@@ -13,7 +13,8 @@ resource "local_file" "run_playbook" {
 
 resource "local_file" "playbook" {
   content = templatefile("templates/ansible/playbook.yml.tpl", {
-      wireguard_role = local.wireguard_role
+      wireguard_role = local.wireguard_role,
+      ssh_role = local.ssh_role
     })
   filename = "local/ansible/playbook.yml"
 }
@@ -21,13 +22,14 @@ resource "local_file" "playbook" {
 
 ## render host variables
 
-resource "local_file" "hostvars" {
+resource "local_file" "hostvars_vpn" {
   for_each = data.aws_instance.vpn_server
   
-  content = templatefile("templates/ansible/hostvars.yml.tpl", {
-    server_name      = each.key,
-    cidr_block       = aws_vpc.sites[each.key].cidr_block
+  content = templatefile("templates/ansible/hostvars-vpn.yml.tpl", {
+    server_name      = "${each.key}_vpn",
     public_ip        = each.value.public_ip,
+    private_ip       = each.value.private_ip
+    cidr_block       = aws_vpc.sites[each.key].cidr_block
 
     vpn_cidr_block   = var.vpn_cidr_block
     vpn_ip           = cidrhost(var.vpn_cidr_block, var.sites[each.key].hostnum)
@@ -48,18 +50,28 @@ resource "local_file" "hostvars" {
       ]
     })
     
-  filename        = "local/ansible/host_vars/${each.key}.yml"
+  filename        = "local/ansible/host_vars/${each.key}_vpn.yml"
   file_permission = "0640"
 }
 
+resource "local_file" "hostvars_prv" {
+  for_each = data.aws_instance.private_server
+  
+  content = templatefile("templates/ansible/hostvars-prv.yml.tpl", {
+    server_name = "${each.key}_prv",
+    private_ip   = each.value.private_ip,
+  })
+  
+  filename        = "local/ansible/host_vars/${each.key}_prv.yml"
+  file_permission = "0640"
+}
 
 ## render the inventory file
 
 resource "local_file" "inventory" {
   content = templatefile("templates/ansible/inventory.ini.tpl", {
-    gateways = join("\n", keys(var.sites))
+    gateways = join("\n", [for k, v in data.aws_instance.vpn_server : format("%s_vpn", k)]),
+    servers  = join("\n", [for k, v in data.aws_instance.private_server : format("%s_prv", k)])
     })
   filename = "local/ansible/inventory.ini"
 }
-
-
