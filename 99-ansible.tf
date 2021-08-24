@@ -26,8 +26,13 @@ resource "local_file" "hostvars" {
   
   content = templatefile("templates/ansible/hostvars.yml.tpl", {
     server_name      = each.key,
+    cidr_block       = aws_vpc.sites[each.key].cidr_block
     public_ip        = each.value.public_ip,
+
+    vpn_cidr_block   = var.vpn_cidr_block
     vpn_ip           = cidrhost(var.vpn_cidr_block, var.sites[each.key].hostnum)
+    vpn_netlen       = split("/", var.vpn_cidr_block)[1]
+    
     private_key      = var.sites[each.key].private_key,
     
     peers = [for k, v in data.aws_instance.vpn_server :

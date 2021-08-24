@@ -1,4 +1,8 @@
 
+variable "studio_name" {
+  default = "s1330"
+}
+
 variable "sites" {
   type = map(object({
     hostnum = number,
@@ -79,10 +83,6 @@ variable "instance_ami" {
 
 variable "spot_price" {
   default = 0.02
-}
-
-variable "studio_name" {
-  default = "s1330"
 }
 
 locals {

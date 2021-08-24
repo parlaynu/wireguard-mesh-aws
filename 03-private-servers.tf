@@ -7,7 +7,7 @@ resource "aws_spot_instance_request" "private_server" {
   ami           = var.instance_ami
   instance_type = var.instance_type
   
-  key_name                    = var.studio_name
+  key_name                    = aws_key_pair.ssh_key.key_name
   vpc_security_group_ids      = [aws_default_security_group.sites[each.key].id, aws_security_group.external[each.key].id]
   subnet_id                   = aws_subnet.sites_private[each.key].id
   private_ip                  = cidrhost(aws_subnet.sites_private[each.key].cidr_block, 6)

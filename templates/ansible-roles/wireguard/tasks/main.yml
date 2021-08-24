@@ -1,15 +1,50 @@
-- name: install config file
+- name: enable kernel forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_file: /etc/sysctl.d/20-forward.conf
+
+- name: install wireguard config file
   template:
-    src: wireguard.cfg
-    dest: /tmp/wireguard.cfg
+    src: wireguard.conf
+    dest: /etc/wireguard/wg0.conf
     owner: root
     group: root
-    mode: 0444
+    mode: 0440
+  notify:
+    - restart wireguard
 
+- name: create wireguard script directory
+  file:
+    path: /etc/wireguard/scripts
+    state: directory
+    owner: root
+    group: root
+    mode: 0750
 
-#ip link add dev wg0 type wireguard
-#ip address add dev wg0 192.168.2.1/24
-##ip address add dev wg0 192.168.2.1 peer 192.168.2.2
-#wg setconf wg0 myconfig.conf
-#ip link set up dev wg0
+- name: install wireguard post-up script
+  template:
+    src: post-up.sh
+    dest: /etc/wireguard/scripts/post-up.sh
+    owner: root
+    group: root
+    mode: 0750
+  notify:
+    - restart wireguard
 
+- name: install wireguard post-down script
+  template:
+    src: post-down.sh
+    dest: /etc/wireguard/scripts/post-down.sh
+    owner: root
+    group: root
+    mode: 0750
+  notify:
+    - restart wireguard
+
+- name: start wireguard
+  systemd:
+    name: wg-quick@wg0
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
