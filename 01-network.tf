@@ -191,3 +191,15 @@ resource "aws_route" "sites_private_internal" {
     null_resource.instance_ready
   ]
 }
+
+resource "aws_route" "sites_private_vpn" {
+  for_each = aws_vpc.sites
+
+  route_table_id = aws_route_table.sites_private[each.key].id
+  instance_id    = data.aws_instance.vpn_server[each.key].id
+  destination_cidr_block = var.vpn_cidr_block
+
+  depends_on = [
+    null_resource.instance_ready
+  ]
+}
