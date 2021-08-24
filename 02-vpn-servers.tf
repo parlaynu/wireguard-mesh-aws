@@ -95,7 +95,7 @@ resource "null_resource" "instance_ready" {
 ## tag the spot instances
 
 resource "null_resource" "vpn_server" {
-  for_each = aws_vpc.sites
+  for_each = data.aws_instance.vpn_server
 
   provisioner "local-exec" {
     command = "scripts/ec2-tag-resource.sh"
@@ -103,7 +103,7 @@ resource "null_resource" "vpn_server" {
     environment = {
       TAG_PROFILE     = var.aws_profile
       TAG_REGION      = var.aws_region
-      TAG_RESOURCE_ID = data.aws_instance.vpn_server[each.key].id
+      TAG_RESOURCE_ID = each.value.id
       TAG_NAME        = "Name"
       TAG_VALUE       = "${var.studio_name}_${each.key}_vpn"
     }
@@ -113,5 +113,28 @@ resource "null_resource" "vpn_server" {
     spot_requests = aws_spot_instance_request.vpn_server[each.key].spot_instance_id
   }
 }
+
+## disable source-dest-check (doesn't work from the spot request)
+
+resource "null_resource" "vpn_server_src_dst_check" {
+  for_each = data.aws_instance.vpn_server
+
+  provisioner "local-exec" {
+    command = "scripts/ec2-disable-src-dst-check.sh"
+    
+    environment = {
+      AWS_PROFILE = var.aws_profile
+      AWS_REGION  = var.aws_region
+      INSTANCE_ID = each.value.id
+    }
+  }
+  
+  triggers = {
+    spot_requests = aws_spot_instance_request.vpn_server[each.key].spot_instance_id
+  }
+}
+
+
+
 
 
