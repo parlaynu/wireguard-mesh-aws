@@ -1,12 +1,12 @@
 # Wireguard VPN Mesh
 
-An example setup of wireguard VPN mesh setup on AWS. Uses multiple VPCs as sites, traffic between
+An example setup of a wireguard VPN mesh on AWS. Uses multiple VPCs as sites, traffic between
 sites routed over wireguard in a fully connected mesh configuration.
 
 Includes ssh configurations for local workstation to access all machines, and configs and keys on
 each server to test interconnections.
 
-The configuration here creates 4x VPCs and 8x EC2 servers. It uses `t2.micro` spot instances. It doesn't
+The configuration here creates 4x VPCs and 8x EC2 servers. It uses `t2.micro` spot instances; it doesn't
 cost a lot, but running it will incur costs.
 
 [Terraform](https://www.terraform.io/) is used to create the infrastructure.
@@ -17,11 +17,12 @@ cost a lot, but running it will incur costs.
 
 ### Configuration
 
-Copy the `terraform.tfvars.example` to `terraform.tfvars` and customise fill in the variables.
+Copy the `terraform.tfvars.example` to `terraform.tfvars` and fill in the variables with your 
+custom values.
 
 You need to generate wireguard keys in advance - tried to make this work with terraform directly
-but couldn't figure it out. For each site, create the private and public keys with this bash 
-loop:
+but couldn't figure it out. For each site, create the private and public keys with a bash 
+loop like this:
 
     for site in core site1 site2 site3
     do
