@@ -43,8 +43,8 @@ resource "aws_spot_instance_request" "vpn_server" {
   associate_public_ip_address = true
   source_dest_check           = false
   disable_api_termination     = false
-  user_data                   = templatefile("templates/ec2-setup-instance.sh.tpl", {
-      server_name = each.key
+  user_data                   = templatefile("templates/ec2-setup-vpn-instance.sh.tpl", {
+      server_name = "${each.key}_vpn"
     })
   
   spot_price = var.spot_price
@@ -52,7 +52,7 @@ resource "aws_spot_instance_request" "vpn_server" {
   wait_for_fulfillment = true
 
   tags = {
-    Name = "${var.studio_name}_${each.key}"
+    Name = "${var.studio_name}_${each.key}_vpn"
   }
   
   # the gateway route needs to be in place so the 
