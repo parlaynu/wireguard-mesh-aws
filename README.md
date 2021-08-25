@@ -46,7 +46,7 @@ Add the contents of these files into `terraform.tfvars` at the correct location.
 
 There is an ssh-config file in `local/ssh.cfg`. To log into a server using it, run:
 
-    ssh -F local/ssh.cfg core_vpn
+    ssh -F local/ssh.cfg core-vpn
 
 There is a `~/.ssh/config` file and key installed on each server for accessing servers
 across the vpn mesh.
