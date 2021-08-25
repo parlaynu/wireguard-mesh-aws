@@ -1,11 +1,11 @@
 %{ for key, value in prv_config }
-Host ${key}_prv
+Host ${key}-prv
   Hostname ${value.private_ip}
-  ProxyJump ${key}_vpn
+  ProxyJump ${key}-vpn
 %{ endfor ~}
 
 %{ for key, value in vpn_config }
-Host ${key}_vpn
+Host ${key}-vpn
   Hostname ${value.public_ip}
 %{ endfor ~}
 

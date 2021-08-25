@@ -15,7 +15,7 @@ resource "aws_spot_instance_request" "private_server" {
   source_dest_check           = true
   disable_api_termination     = false
   user_data                   = templatefile("templates/ec2-setup-prv-instance.sh.tpl", {
-      server_name = "${each.key}_prv"
+      server_name = "${each.key}-prv"
     })
   
   spot_price = var.spot_price

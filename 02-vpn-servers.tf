@@ -45,7 +45,7 @@ resource "aws_spot_instance_request" "vpn_server" {
   source_dest_check           = false
   disable_api_termination     = false
   user_data                   = templatefile("templates/ec2-setup-vpn-instance.sh.tpl", {
-      server_name = "${each.key}_vpn"
+      server_name = "${each.key}-vpn"
     })
   
   spot_price = var.spot_price

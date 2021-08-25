@@ -26,7 +26,7 @@ resource "local_file" "hostvars_vpn" {
   for_each = data.aws_instance.vpn_server
   
   content = templatefile("templates/ansible/hostvars-vpn.yml.tpl", {
-    server_name      = "${each.key}_vpn",
+    server_name      = "${each.key}-vpn",
     public_ip        = each.value.public_ip,
     private_ip       = each.value.private_ip
     cidr_block       = aws_vpc.sites[each.key].cidr_block
@@ -50,7 +50,7 @@ resource "local_file" "hostvars_vpn" {
       ]
     })
     
-  filename        = "local/ansible/host_vars/${each.key}_vpn.yml"
+  filename        = "local/ansible/host_vars/${each.key}-vpn.yml"
   file_permission = "0640"
 }
 
@@ -58,11 +58,11 @@ resource "local_file" "hostvars_prv" {
   for_each = data.aws_instance.private_server
   
   content = templatefile("templates/ansible/hostvars-prv.yml.tpl", {
-    server_name = "${each.key}_prv",
+    server_name = "${each.key}-prv",
     private_ip   = each.value.private_ip,
   })
   
-  filename        = "local/ansible/host_vars/${each.key}_prv.yml"
+  filename        = "local/ansible/host_vars/${each.key}-prv.yml"
   file_permission = "0640"
 }
 
@@ -70,8 +70,8 @@ resource "local_file" "hostvars_prv" {
 
 resource "local_file" "inventory" {
   content = templatefile("templates/ansible/inventory.ini.tpl", {
-    gateways = join("\n", [for k, v in data.aws_instance.vpn_server : format("%s_vpn", k)]),
-    servers  = join("\n", [for k, v in data.aws_instance.private_server : format("%s_prv", k)])
+    gateways = join("\n", [for k, v in data.aws_instance.vpn_server : format("%s-vpn", k)]),
+    servers  = join("\n", [for k, v in data.aws_instance.private_server : format("%s-prv", k)])
     })
   filename = "local/ansible/inventory.ini"
 }
