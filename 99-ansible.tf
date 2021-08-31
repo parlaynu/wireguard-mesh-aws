@@ -32,19 +32,18 @@ resource "local_file" "hostvars_vpn" {
     cidr_block       = aws_vpc.sites[each.key].cidr_block
 
     vpn_cidr_block   = var.vpn_cidr_block
-    vpn_ip           = cidrhost(var.vpn_cidr_block, var.sites[each.key].hostnum)
     vpn_netlen       = split("/", var.vpn_cidr_block)[1]
-    
-    private_key      = var.sites[each.key].private_key,
+    vpn_ip           = cidrhost(var.vpn_cidr_block, var.sites[each.key].vpn_hostnum)
+    vpn_private_key  = var.sites[each.key].vpn_private_key,
     
     peers = [for k, v in data.aws_instance.vpn_server :
         {
           name = k
-          public_key = var.sites[k].public_key
           cidr_block = var.sites[k].cidr_block
           public_ip = v.public_ip
           private_ip = v.private_ip
-          vpn_ip = cidrhost(var.vpn_cidr_block, var.sites[k].hostnum)
+          vpn_public_key = var.sites[k].vpn_public_key
+          vpn_ip = cidrhost(var.vpn_cidr_block, var.sites[k].vpn_hostnum)
         }
         if k != each.key
       ]

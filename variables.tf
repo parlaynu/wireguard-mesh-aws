@@ -5,35 +5,35 @@ variable "studio_name" {
 
 variable "sites" {
   type = map(object({
-    hostnum = number,
     cidr_block = string,
-    private_key = string,
-    public_key = string
+    vpn_hostnum = number,
+    vpn_private_key = string,
+    vpn_public_key = string
   }))
   default = {
     core = {
-      hostnum = 100
-      cidr_block  = "192.168.100.0/24"
-      private_key = ""
-      public_key  = ""
+      cidr_block = "192.168.100.0/24"
+      vpn_hostnum     = 100
+      vpn_private_key = ""
+      vpn_public_key  = ""
     }
     site1 = {
-      hostnum = 101
-      cidr_block  = "192.168.101.0/24"
-      private_key = ""
-      public_key  = ""
+      cidr_block = "192.168.101.0/24"
+      vpn_hostnum     = 101
+      vpn_private_key = ""
+      vpn_public_key  = ""
     }
     site2 = {
-      hostnum = 102
-      cidr_block  = "192.168.102.0/24"
-      private_key = ""
-      public_key  = ""
+      cidr_block = "192.168.102.0/24"
+      vpn_hostnum     = 102
+      vpn_private_key = ""
+      vpn_public_key  = ""
     }
     site3 = {
-      hostnum = 103
-      cidr_block  = "192.168.103.0/24"
-      private_key = ""
-      public_key  = ""
+      cidr_block = "192.168.103.0/24"
+      vpn_hostnum     = 103
+      vpn_private_key = ""
+      vpn_public_key  = ""
     }
   }
 }
@@ -66,11 +66,11 @@ variable "aws_profile" {
 }
 
 variable "aws_region" {
-  default = ""
+  default = "ap-southeast-2"
 }
 
 variable "aws_zone" {
-  default = ""
+  default = "ap-southeast-2c"
 }
 
 variable "instance_type" {
@@ -78,7 +78,7 @@ variable "instance_type" {
 }
 
 variable "instance_ami" {
-  default = ""
+  default = "ami-0567f647e75c7bc05"
 }
 
 variable "spot_price" {
