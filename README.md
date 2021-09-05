@@ -15,7 +15,7 @@ cost a lot, but running it will incur costs.
 
 ## Network
 
-The build network looks like this:
+The built network looks like this:
 
 ![](images/wireguard-network.jpeg)
 
