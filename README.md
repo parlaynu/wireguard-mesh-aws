@@ -29,7 +29,7 @@ custom values.
 Create the private and public keys with the script `make-keys.sh`. An example run looks like 
 this below (note that these don't work so don't try and just use them):
 
-    $ ./make-keys.sh core site1 site2 site3
+    $ ./make-keys.sh 4
     site: core
         vpn_private_key = "GDuHtwb6NxSuyh5Jp+2kEQpLa4fAY1WOqvvatV0n9W0="
         vpn_public_key  = "Kx+tF0lHlYz8DV/wnmG5TUZPcB9ElL8vr0rIbI5sLCg="
