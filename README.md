@@ -26,9 +26,6 @@ The built network looks like this:
 Copy the `terraform.tfvars.example` to `terraform.tfvars` and fill in the variables with your 
 custom values.
 
-You need to generate wireguard keys in advance - tried to make this work with terraform directly
-but couldn't figure it out.
-
 Create the private and public keys with the script `make-keys.sh`. An example run looks like 
 this below (note that these don't work so don't try and just use them):
 
