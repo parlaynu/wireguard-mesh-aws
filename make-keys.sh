@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd ${SCRIPT_DIR}
-
 if [ $# -eq 0 ]; then
   echo "Usage: $(basename $0) [site_name [...]]"
   exit 1
