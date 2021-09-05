@@ -44,7 +44,7 @@ this below (note that these don't work so don't try and just use them):
         vpn_public_key  = "oL/f2YQN68NEtDtCXmpD90VLbbCO3SoMEaVK0YxC4nE="
 
 
-Copy the keys into the terraform.tfvars script at the correct location.
+Copy the keys into the terraform.tfvars file at the correct location.
 
 ### Build The Infrastructure
 
