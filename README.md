@@ -13,6 +13,12 @@ cost a lot, but running it will incur costs.
 
 [Ansible](https://docs.ansible.com/ansible_community.html) is used to configure the servers.
 
+## Network
+
+The final network looks like this:
+
+![Alt text](images/wireguard-network.jpeg "a title")
+
 ## Setup
 
 ### Configuration
