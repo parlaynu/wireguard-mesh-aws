@@ -29,14 +29,25 @@ custom values.
 You need to generate wireguard keys in advance - tried to make this work with terraform directly
 but couldn't figure it out.
 
-Create the private and public keys with a bash loop like this:
+Create the private and public keys with the script `make-keys.sh`. An example run looks like 
+this below (note that these don't work so don't try and just use them):
 
-    for site in core site1 site2 site3
-    do
-        wg genkey | tee ${site}.key | wg pubkey > ${site}.pub
-    done
+    $ ./make-keys.sh core site1 site2 site3
+    site: core
+        vpn_private_key = "GDuHtwb6NxSuyh5Jp+2kEQpLa4fAY1WOqvvatV0n9W0="
+        vpn_public_key  = "Kx+tF0lHlYz8DV/wnmG5TUZPcB9ElL8vr0rIbI5sLCg="
+    site: site1
+        vpn_private_key = "oM3XFx/I0nW5N5pIC0UAjoqxFzSedVfzrmf0Faq0jH0="
+        vpn_public_key  = "nd+ZjI7omhzAvElOIDQfh7Jxrct7bwWRqA7qQO3TL0M="
+    site: site2
+        vpn_private_key = "sIgJZJTBOb04+G7G5smjtRHdhPb0KlHDM5yZHcHY5FI="
+        vpn_public_key  = "mtJ93WCkOOxWI8P1KmMIWZ0RIe3esJx8ydR4iuXTLjs="
+    site: site3
+        vpn_private_key = "eNpOBcpr2y3DoTgf8CyfKeIH3cQ4rDrvTcjSPzc8BHs="
+        vpn_public_key  = "oL/f2YQN68NEtDtCXmpD90VLbbCO3SoMEaVK0YxC4nE="
 
-Add the contents of these files into `terraform.tfvars` at the correct location.
+
+Copy the keys into the terraform.tfvars script at the correct location.
 
 ### Build The Infrastructure
 
