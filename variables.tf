@@ -11,7 +11,7 @@ variable "sites" {
     vpn_public_key = string
   }))
   default = {
-    core = {
+    site0 = {
       cidr_block = "192.168.100.0/24"
       vpn_hostnum     = 100
       vpn_private_key = ""

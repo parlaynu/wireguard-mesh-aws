@@ -7,11 +7,11 @@ aws_profile = "my-profile"
 #spot_price = 0.02
 
 sites = {
-  core = {
+  site0 = {
     cidr_block = "192.168.100.0/24"
     vpn_hostnum     = 100
-    vpn_private_key = "core-private-key"
-    vpn_public_key  = "core-public-key"
+    vpn_private_key = "site0-private-key"
+    vpn_public_key  = "site0-public-key"
   }
   site1 = {
     cidr_block = "192.168.101.0/24"

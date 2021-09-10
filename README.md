@@ -30,7 +30,7 @@ Create the private and public keys with the script `make-keys.sh`. An example ru
 this below (note that these don't work so don't try and just use them):
 
     $ ./make-keys.sh 4
-    site: core
+    site: site0
         vpn_private_key = "GDuHtwb6NxSuyh5Jp+2kEQpLa4fAY1WOqvvatV0n9W0="
         vpn_public_key  = "Kx+tF0lHlYz8DV/wnmG5TUZPcB9ElL8vr0rIbI5sLCg="
     site: site1
@@ -60,7 +60,7 @@ Copy the keys into the terraform.tfvars file at the correct location.
 
 There is an ssh-config file in `local/ssh.cfg`. To log into a server using it, run:
 
-    ssh -F local/ssh.cfg core-vpn
+    ssh -F local/ssh.cfg site0-vpn
 
 There is a `~/.ssh/config` file and key installed on each server for accessing servers
 across the vpn mesh.
