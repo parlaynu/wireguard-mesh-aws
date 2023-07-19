@@ -1,0 +1,35 @@
+aws_profile = "my-profile"
+#aws_region = "my-region"
+#aws_zone = "my-zone"
+
+#instance_type = "my-instance-type"
+#instance_ami = "my-instance-ami"
+#spot_price = 0.02
+
+sites = {
+  site0 = {
+    cidr_block = "192.168.100.0/24"
+    vpn_hostnum     = 100
+    vpn_private_key = "site0-private-key"
+    vpn_public_key  = "site0-public-key"
+  }
+  site1 = {
+    cidr_block = "192.168.101.0/24"
+    vpn_hostnum     = 101
+    vpn_private_key = "site1-private-key"
+    vpn_public_key  = "site1-public-key"
+  }
+  site2 = {
+    cidr_block = "192.168.102.0/24"
+    vpn_hostnum     = 102
+    vpn_private_key = "site2-private-key"
+    vpn_public_key  = "site2-public-key"
+  }
+  site3 = {
+    cidr_block = "192.168.103.0/24"
+    vpn_hostnum     = 103
+    vpn_private_key = "site3-private-key"
+    vpn_public_key  = "site3-public-key"
+  }
+}
+
